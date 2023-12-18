@@ -25,7 +25,7 @@ const User = UserModel(sequelize, DataTypes);
 const Alert = AlertModel(sequelize, DataTypes);
 const EmployeeAlert = EmployeeAlertModel(sequelize, DataTypes);
 const initDb = () => {
-  return sequelize.sync({ force: true }).then((_) => {
+  return sequelize.sync().then((_) => {
     /*  books.map((book) => {
       Book.create(book).then((book) => {});
     });
