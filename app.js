@@ -7,8 +7,8 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 app
-  .use(bodyParser.json())
   .use(cors())
+  .use(bodyParser.json())
   .use(favicon(__dirname + "/favicon.ico"));
 initDb();
 
