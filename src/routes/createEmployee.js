@@ -17,7 +17,7 @@ module.exports = (app) => {
       })
         .then((employee) => {
           const message = `L'employé ${
-            employee.firstname + employee.lastname
+            employee.firstname + " " + employee.lastname
           } a bien été ajouté`;
 
           res.json({ message, data: employee });

@@ -6,6 +6,11 @@ module.exports = (app) => {
   app.post("/api/companies", auth, (req, res) => {
     Company.create({
       companyName: req.body.companyName,
+      country: req.body.country,
+      streetAddress: req.body.streetAddress,
+      city: req.body.city,
+      postalCode: req.body.postalCode,
+      companyLogo: req.body.companyLogo,
     })
       .then((company) => {
         const message = `L'entreprise ${company.companyName} a bien été ajouté`;
