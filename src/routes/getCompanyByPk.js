@@ -2,8 +2,9 @@ const { Company } = require("../db/sequelize");
 const auth = require("../auth/auth");
 
 module.exports = (app) => {
-  app.get("/api/companies/:id", auth, (req, res) => {
+  app.get("/api/companies/:companyId", auth, (req, res) => {
     const id = req.params.companyId;
+    console.log(id);
 
     Company.findByPk(id)
       .then((company) => {

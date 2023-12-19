@@ -2,7 +2,7 @@ const { Alert } = require("../db/sequelize");
 const auth = require("../auth/auth");
 
 module.exports = (app) => {
-  app.get("/api/alerts/:id", auth, (req, res) => {
+  app.get("/api/alerts/:alertId", auth, (req, res) => {
     const id = req.params.alertId;
 
     Alert.findByPk(id)
