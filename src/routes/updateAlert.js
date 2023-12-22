@@ -3,7 +3,7 @@ const { ValidationError } = require("sequelize");
 const auth = require("../auth/auth");
 
 module.exports = (app) => {
-  app.put("/api/alerts/:id", auth, (req, res) => {
+  app.put("/api/alerts/:alertId", auth, (req, res) => {
     const id = req.params.alertId;
 
     Alert.update(req.body, { where: { alertId: id } })

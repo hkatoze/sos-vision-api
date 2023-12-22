@@ -41,20 +41,32 @@ module.exports = (Sequelize, DataTypes) => {
           notNull: { msg: "Le numéro de téléphone est requis" },
         },
       },
-      function: {
+      profilUrl: {
         type: DataTypes.STRING,
         allowNull: false,
 
         validate: {
           notEmpty: {
-            msg: "La fonction de l'utilisateur dans l'entreprise est requise",
+            msg: "L'image de profil de l'employé est requis",
           },
           notNull: {
-            msg: "La fonction de l'utilisateur dans l'entreprise est requise",
+            msg: "L'image de profil de l'employé est requis",
           },
         },
       },
+      job: {
+        type: DataTypes.STRING,
+        allowNull: false,
 
+        validate: {
+          notEmpty: {
+            msg: "Le job de l'employé est requis",
+          },
+          notNull: {
+            msg: "Le job de l'employé est requis",
+          },
+        },
+      },
       role: {
         type: DataTypes.STRING,
         validate: {

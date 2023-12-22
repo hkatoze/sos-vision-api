@@ -13,7 +13,8 @@ module.exports = (app) => {
         phone_number: req.body.phone_number,
         password: hash,
         role: req.body.role,
-        function: req.body.function,
+        profilUrl:req.body.profilUrl,
+        job: req.body.job,
       })
         .then((employee) => {
           const message = `L'employé ${
