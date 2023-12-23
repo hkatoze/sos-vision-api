@@ -53,6 +53,7 @@ require("./src/routes/loginToApi")(app);
 require("./src/routes/login")(app);
 require("./src/routes/createAlert")(app);
 require("./src/routes/getAllAlerts")(app);
+require("./src/routes/getAllEmployeeAlerts")(app);
 require("./src/routes/getAlertByPk")(app);
 require("./src/routes/updateAlert")(app);
 
