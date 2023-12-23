@@ -14,13 +14,17 @@ initDb();
 
 /* ........All routes list........... */
 require("./src/routes/home")(app);
+
+/* ============USER ROUTES============= */
+//Get user by id
+require("./src/routes/getUserByPk")(app);
+//Update user
+require("./src/routes/updateUser")(app);
 /* ============EMPLOYEE ROUTES============= */
 //Fetch all employees
 require("./src/routes/getAllEmployees")(app);
 //Get employee by id
 require("./src/routes/getEmployeeByPk")(app);
-//Get user by id
-require("./src/routes/getUserByPk")(app);
 //Create employee
 require("./src/routes/createEmployee")(app);
 //Delete employee

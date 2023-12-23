@@ -45,7 +45,7 @@ module.exports = (Sequelize, DataTypes) => {
           notNull: { msg: "Votre role dans l'entreprise est requise" },
         },
       },
-       firstname: {
+      firstname: {
         type: DataTypes.STRING,
         allowNull: false,
 
@@ -54,7 +54,7 @@ module.exports = (Sequelize, DataTypes) => {
           notNull: { msg: "Votre nom est requis" },
         },
       },
-       lastname: {
+      lastname: {
         type: DataTypes.STRING,
         allowNull: false,
 
@@ -65,7 +65,7 @@ module.exports = (Sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+
         validate: {
           is: {
             args: [
@@ -73,8 +73,6 @@ module.exports = (Sequelize, DataTypes) => {
             ],
             msg: "Le mot de passe doit être formé d'au moins 8 caractères, avoir au moins une lettre majuscule,au moins une lettre miniscule, au moins un caractère spécial et au moins un chiffre.",
           },
-          notEmpty: { msg: "Le mot de passe est requis." },
-          notNull: { msg: "Le mot de passe est requis." },
         },
       },
     },
