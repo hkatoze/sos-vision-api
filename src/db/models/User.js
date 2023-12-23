@@ -45,6 +45,24 @@ module.exports = (Sequelize, DataTypes) => {
           notNull: { msg: "Votre role dans l'entreprise est requise" },
         },
       },
+       firstname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+
+        validate: {
+          notEmpty: { msg: "Votre Nom est requis" },
+          notNull: { msg: "Votre nom est requis" },
+        },
+      },
+       lastname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+
+        validate: {
+          notEmpty: { msg: "Votre prénom est requis" },
+          notNull: { msg: "Votre prénom est requis" },
+        },
+      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,

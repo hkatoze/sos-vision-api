@@ -10,6 +10,8 @@ module.exports = (app) => {
         username: req.body.username,
         password: hash,
         role: req.body.role,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
       })
         .then((user) => {
           const message = `L'utilisateur ${user.username} a bien été crée`;
