@@ -14,7 +14,7 @@ module.exports = (app) => {
         lastname: req.body.lastname,
       })
         .then((user) => {
-          const message = `L'utilisateur ${user.username} a bien été crée`;
+          const message = `Compte crée avec succès!`;
 
           res.json({ message, data: user });
         })
