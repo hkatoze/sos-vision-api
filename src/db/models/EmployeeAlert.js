@@ -1,7 +1,8 @@
-const { Employee, Alert } = require("./path_vers_vos_modeles"); // Assurez-vous d'ajuster le chemin correctement
+const AlertModel = require("./Alert.js");
+const EmployeeModel = require("./Employee.js");
 
 module.exports = (Sequelize, DataTypes) => {
-  const EmployeeAlert = Sequelize.define(
+  const EmployeeAlertModel = Sequelize.define(
     "EmployeeAlert",
     {
       employeeAlertId: {
@@ -29,8 +30,11 @@ module.exports = (Sequelize, DataTypes) => {
     { timestamp: true }
   );
 
-  EmployeeAlert.belongsTo(Employee, { foreignKey: "employeeId" });
-  EmployeeAlert.belongsTo(Alert, { foreignKey: "alertId" });
+ 
+   
+  
 
-  return EmployeeAlert;
+  
+
+  return EmployeeAlertModel;
 };
