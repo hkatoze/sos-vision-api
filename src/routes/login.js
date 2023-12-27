@@ -29,9 +29,9 @@ module.exports = (app) => {
                   firstname: user.firstname,
                   lastname: user.lastname,
                   phone_number: user.phone_number,
-                  password: user.password,
+                  
                   role: user.role,
-                  function: user.function,
+                  job: user.job,
                   companyName: company.companyName,
                 },
               });
