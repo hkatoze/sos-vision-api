@@ -1,9 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const EmployeeModel = require("./models/Employee");
+ const {Employee,Alert,EmployeeAlert} = require("./models/EmployeeAlert")
 const CompanyModel = require("./models/Company");
-const AlertModel = require("./models/Alert");
+ 
 const UserModel = require("./models/User");
-const EmployeeAlertModel = require("./models/EmployeeAlert");
+ 
  
 
 const sequelize = new Sequelize(
@@ -17,11 +17,10 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
-const EmployeeAlert = EmployeeAlertModel(sequelize, DataTypes);
-const Employee = EmployeeModel(sequelize, DataTypes);
+ 
 const Company = CompanyModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
-const Alert = AlertModel(sequelize, DataTypes);
+ 
 
 const initDb = () => {
   return sequelize.sync().then((_) => {

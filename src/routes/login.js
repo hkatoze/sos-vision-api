@@ -25,6 +25,7 @@ module.exports = (app) => {
                 message: connexionMessage,
                 data: {
                   companyId: user.companyId,
+                  employeeId: user.employeeId,
                   firstname: user.firstname,
                   lastname: user.lastname,
                   phone_number: user.phone_number,
