@@ -1,6 +1,6 @@
 const { ValidationError, UniqueConstraintError } = require("sequelize");
 const auth = require("../auth/auth");
-const { Alert, Employee } = require("../db/sequelize");
+const { Alert, Employee, EmployeeAlert } = require("../db/sequelize");
 
 module.exports = (app) => {
   app.post("/api/alerts", auth, (req, res) => {
@@ -21,9 +21,18 @@ module.exports = (app) => {
         const message = true;
 
         Employee.findByPk(id).then((employee) => {
-          res.json({
-            message: message,
-            data: { alert: alertItem, employee: employee },
+          EmployeeAlert.create({
+            alertId: alertItem.alertId,
+            employeeId: employee.employeeId,
+          }).then((employeeAlert) => {
+            res.json({
+              message: message,
+              data: {
+                alert: alertItem,
+                employee: employee,
+                employeeAlertId: employeeAlert.employeeAlert,
+              },
+            });
           });
         });
       })
