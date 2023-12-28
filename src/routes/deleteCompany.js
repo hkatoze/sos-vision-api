@@ -2,7 +2,7 @@ const { Company } = require("../db/sequelize");
 const auth = require("../auth/auth");
 
 module.exports = (app) => {
-  app.delete("/api/companies/:id", auth, (req, res) => {
+  app.delete("/api/companies/:companyId", auth, (req, res) => {
     const id = req.params.companyId;
 
     Company.findByPk(id)

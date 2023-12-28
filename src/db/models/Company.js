@@ -7,7 +7,7 @@ module.exports = (Sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-
+    
       companyName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -41,6 +41,7 @@ module.exports = (Sequelize, DataTypes) => {
       postalCode: {
         type: DataTypes.STRING,
       },
+
       companyLogo: {
         type: DataTypes.STRING,
         allowNull: false,
