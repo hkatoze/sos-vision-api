@@ -30,7 +30,7 @@ module.exports = (app) => {
               data: {
                 alert: alertItem,
                 employee: employee,
-                employeeAlertId: employeeAlert.employeeAlert,
+                employeeAlertId: employeeAlert.employeeAlertId,
               },
             });
           });
