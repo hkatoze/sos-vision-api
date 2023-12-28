@@ -29,7 +29,7 @@ module.exports = (app) => {
                   firstname: user.firstname,
                   lastname: user.lastname,
                   phone_number: user.phone_number,
-                  
+                  profilUrl: user.profilUrl,
                   role: user.role,
                   job: user.job,
                   companyName: company.companyName,
