@@ -2,10 +2,9 @@ const { ValidationError, UniqueConstraintError } = require("sequelize");
 const bcrypt = require("bcrypt");
 const auth = require("../auth/auth");
 const { Employee } = require("../db/sequelize");
-var admin = require("firebase-admin");
-var firebase_service_account = require("../auth/firebase_private_key.json");
 
-module.exports = (app) => {
+
+module.exports = (app,admin) => {
   app.post("/api/employees", auth, (req, res) => {
     bcrypt.hash(req.body.password, 10).then((hash) => {
       Employee.create({
@@ -27,7 +26,7 @@ module.exports = (app) => {
           // Ajouter l'employé à la collection Firebase
           const firebaseUser = {
             companyId: employee.companyId,
-            employeeId: employee.id, // Utilisez l'ID généré par Sequelize
+            employeeId: employee.employeeId, // Utilisez l'ID généré par Sequelize
             firstname: employee.firstname,
             lastname: employee.lastname,
             phone_number: employee.phone_number,
@@ -37,17 +36,20 @@ module.exports = (app) => {
             profilUrl: employee.profilUrl,
           };
 
-          admin.initializeApp({
-            credential: admin.credential.cert(firebase_service_account),
-          });
-
+         
           admin
             .firestore()
             .collection("users")
-            .doc(employee.id.toString())
-            .set(firebaseUser);
-
-          res.json({ message, data: employee });
+            .doc(`${employee.employeeId}`)
+            .set(firebaseUser)
+            .then(() => {
+              res.json({ message, data: employee });
+            })
+            .catch((firebaseError) => {
+              console.log(firebaseError);
+              const message = `L'employé n'a pas pu être ajouté à Firestore. Réessayer dans quelques instants.`;
+              res.status(500).json({ message, data: firebaseError });
+            });
         })
         .catch((error) => {
           if (error instanceof ValidationError) {
@@ -56,6 +58,8 @@ module.exports = (app) => {
           if (error instanceof UniqueConstraintError) {
             return res.status(400).json({ message: error.message });
           }
+
+          console.log(error);
           const message = `L'employé n'a pas pu être ajouté. Réessayer dans quelques instants.`;
           res.status(500).json({ message, data: error });
         });

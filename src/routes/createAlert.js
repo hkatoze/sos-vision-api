@@ -2,11 +2,9 @@ const { ValidationError, UniqueConstraintError } = require("sequelize");
 const auth = require("../auth/auth");
 const { Alert, Employee, EmployeeAlert } = require("../db/sequelize");
 
-var admin = require("firebase-admin");
-
 var firebase_service_account = require("../auth/firebase_private_key.json");
 
-module.exports = (app) => {
+module.exports = (app, admin) => {
   app.post("/api/alerts", auth, (req, res) => {
     const id = req.body.employeeId;
 
@@ -29,31 +27,64 @@ module.exports = (app) => {
             alertId: alertItem.alertId,
             employeeId: employee.employeeId,
           }).then((employeeAlert) => {
-            admin.initializeApp({
-              credential: admin.credential.cert(firebase_service_account),
-            });
+            // Filtrer les utilisateurs en fonction de leur rôle
+            const roleToFilter =
+              req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
 
-            
-            res.json({
-              message: message,
-              data: {
-                alert: alertItem,
-                employee: employee,
-                employeeAlertId: employeeAlert.employeeAlertId,
-              },
-            });
+            admin
+              .firestore()
+              .collection("users")
+              .where("companyId", "==", req.body.companyId)
+              .where("role", "==", roleToFilter)
+              .get()
+              .then((snapshot) => {
+                const tokens = [];
+                snapshot.forEach((doc) => {
+                  tokens.push(doc.data().token);
+                });
+
+                admin.messaging().send(
+                  tokens,
+                  {
+                    data: {
+                      companyId: req.body.companyId,
+                      employeeId: req.body.employeeId,
+                      alertType: req.body.alertType,
+                      alertStatus: req.body.alertStatus,
+                      alertLocation: {
+                        longitude: req.body.alertLocation.longitude,
+                        latitude: req.body.alertLocation.latitude,
+                      },
+                    },
+                  },
+                  {
+                    contentAvailable: true,
+                    priority: "high",
+                  }
+                );
+
+                res.json({
+                  message: message,
+                  data: {
+                    alert: alertItem,
+                    employee: employee,
+                    employeeAlertId: employeeAlert.employeeAlertId,
+                  },
+                });
+              });
           });
         });
       })
       .catch((error) => {
-        if (error instanceof ValidationError) {
+        if (
+          error instanceof ValidationError ||
+          error instanceof UniqueConstraintError
+        ) {
           return res.status(400).json({ message: error.message });
+        } else {
+          const message = `L'alerte n'a pas pu être ajoutée. Réessayez dans quelques instants.`;
+          res.status(500).json({ message, data: error });
         }
-        if (error instanceof UniqueConstraintError) {
-          return res.status(400).json({ message: error.message });
-        }
-        const message = `L'alerte n'a pas pu être ajouté. Réessayer dans quelques instants.`;
-        res.status(500).json({ message, data: error });
       });
   });
 };

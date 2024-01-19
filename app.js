@@ -3,6 +3,12 @@ const express = require("express");
 const { initDb } = require("./src/db/sequelize");
 const favicon = require("serve-favicon");
 const cors = require("cors");
+const admin = require("firebase-admin");
+const firebase_service_account = require("./src/auth/firebase_private_key.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(firebase_service_account),
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,7 +32,7 @@ require("./src/routes/getAllEmployees")(app);
 //Get employee by id
 require("./src/routes/getEmployeeByPk")(app);
 //Create employee
-require("./src/routes/createEmployee")(app);
+require("./src/routes/createEmployee")(app, admin);
 //Delete employee
 require("./src/routes/deleteEmployee")(app);
 //Update employee
@@ -51,7 +57,7 @@ require("./src/routes/loginToApi")(app);
 
 /* ============MOBILE APP USES CASES ROUTES============= */
 require("./src/routes/login")(app);
-require("./src/routes/createAlert")(app);
+require("./src/routes/createAlert")(app, admin);
 require("./src/routes/getAllAlerts")(app);
 require("./src/routes/getAllEmployeeAlerts")(app);
 require("./src/routes/getAlertByPk")(app);
