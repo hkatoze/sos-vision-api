@@ -31,6 +31,7 @@ module.exports = (app) => {
                   phone_number: user.phone_number,
                   profilUrl: user.profilUrl,
                   role: user.role,
+                  tokens: user.tokens,
                   job: user.job,
                   companyName: company.companyName,
                 },
