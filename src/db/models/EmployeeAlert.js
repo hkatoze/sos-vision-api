@@ -175,6 +175,11 @@ const Employee= sequelize.define(
         notNull: { msg: "Le mot de passe est requis." },
       },
     },
+
+    tokens: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   { timestamp: true }
 );
