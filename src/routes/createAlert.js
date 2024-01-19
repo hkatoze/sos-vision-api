@@ -36,44 +36,45 @@ module.exports = (app, admin) => {
               .collection("users")
               .where("companyId", "==", req.body.companyId)
               .where("role", "==", roleToFilter)
-              .get();
+              .get()
+              .then((snapshots) => {
+                const tokensArray = [];
+                snapshots.forEach((doc) => {
+                  const tokensString = doc.data().tokens;
+                  if (tokensString) {
+                    const tokens = JSON.parse(tokensString);
+                    tokensArray.push(...tokens);
+                  }
+                });
 
-            const tokensArray = [];
-            snapshot.docs.forEach((doc) => {
-              const tokensString = doc.data().tokens;
-              if (tokensString) {
-                const tokens = JSON.parse(tokensString);
-                tokensArray.push(...tokens);
-              }
-            });
-
-            admin.messaging().send(
-              tokensArray,
-              {
-                data: {
-                  companyId: req.body.companyId,
-                  employeeId: req.body.employeeId,
-                  alertType: req.body.alertType,
-                  alertStatus: req.body.alertStatus,
-                  alertLocation: {
-                    longitude: req.body.alertLocation.longitude,
-                    latitude: req.body.alertLocation.latitude,
+                admin.messaging().send(
+                  tokensArray,
+                  {
+                    data: {
+                      companyId: req.body.companyId,
+                      employeeId: req.body.employeeId,
+                      alertType: req.body.alertType,
+                      alertStatus: req.body.alertStatus,
+                      alertLocation: {
+                        longitude: req.body.alertLocation.longitude,
+                        latitude: req.body.alertLocation.latitude,
+                      },
+                    },
                   },
-                },
-              },
-              {
-                contentAvailable: true,
-                priority: "high",
-              }
-            );
-            res.json({
-              message: message,
-              data: {
-                alert: alertItem,
-                employee: employee,
-                employeeAlertId: employeeAlert.employeeAlertId,
-              },
-            });
+                  {
+                    contentAvailable: true,
+                    priority: "high",
+                  }
+                );
+                res.json({
+                  message: message,
+                  data: {
+                    alert: alertItem,
+                    employee: employee,
+                    employeeAlertId: employeeAlert.employeeAlertId,
+                  },
+                });
+              });
           });
         });
       })
