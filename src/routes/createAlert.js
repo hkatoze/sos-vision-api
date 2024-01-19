@@ -39,7 +39,7 @@ module.exports = (app, admin) => {
               .get();
 
             const tokensArray = [];
-            snapshot.forEach((doc) => {
+            snapshot.docs.forEach((doc) => {
               const tokensString = doc.data().tokens;
               if (tokensString) {
                 const tokens = JSON.parse(tokensString);
