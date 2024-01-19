@@ -46,26 +46,22 @@ module.exports = (app, admin) => {
                     tokensArray.push(...tokens);
                   }
                 });
-
-                admin.messaging().send(
-                  tokensArray,
-                  {
-                    data: {
-                      companyId: req.body.companyId,
-                      employeeId: req.body.employeeId,
-                      alertType: req.body.alertType,
-                      alertStatus: req.body.alertStatus,
-                      alertLocation: {
-                        longitude: req.body.alertLocation.longitude,
-                        latitude: req.body.alertLocation.latitude,
-                      },
-                    },
+                const messageToSend = {
+                  data: {
+                    type: "warning",
+                    content: "J'ai besoin d'aide 🆘🆘🆘",
                   },
-                  {
-                    contentAvailable: true,
-                    priority: "high",
-                  }
-                );
+                  topic: "weather",
+                };
+                admin
+                  .messaging()
+                  .send(messageToSend)
+                  .then((response) => {
+                    console.log("Successfully sent message:", response);
+                  })
+                  .catch((error) => {
+                    console.log("Error sending message:", error);
+                  });
                 res.json({
                   message: message,
                   data: {
