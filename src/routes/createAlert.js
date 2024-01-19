@@ -31,47 +31,48 @@ module.exports = (app, admin) => {
             const roleToFilter =
               req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
 
-            admin
+            const snapshot = admin
               .firestore()
               .collection("users")
               .where("companyId", "==", req.body.companyId)
               .where("role", "==", roleToFilter)
-              .get()
-              .then((snapshot) => {
-                const tokens = [];
-                snapshot.forEach((doc) => {
-                  tokens.push(doc.data().token);
-                });
+              .get();
+          });
+          const tokensArray = [];
+          snapshot.forEach((doc) => {
+            const tokensString = doc.data().tokens;
+            if (tokensString) {
+              const tokens = JSON.parse(tokensString);
+              tokensArray.push(...tokens);
+            }
+          });
 
-                admin.messaging().send(
-                  tokens,
-                  {
-                    data: {
-                      companyId: req.body.companyId,
-                      employeeId: req.body.employeeId,
-                      alertType: req.body.alertType,
-                      alertStatus: req.body.alertStatus,
-                      alertLocation: {
-                        longitude: req.body.alertLocation.longitude,
-                        latitude: req.body.alertLocation.latitude,
-                      },
-                    },
-                  },
-                  {
-                    contentAvailable: true,
-                    priority: "high",
-                  }
-                );
-
-                res.json({
-                  message: message,
-                  data: {
-                    alert: alertItem,
-                    employee: employee,
-                    employeeAlertId: employeeAlert.employeeAlertId,
-                  },
-                });
-              });
+          admin.messaging().send(
+            tokensArray,
+            {
+              data: {
+                companyId: req.body.companyId,
+                employeeId: req.body.employeeId,
+                alertType: req.body.alertType,
+                alertStatus: req.body.alertStatus,
+                alertLocation: {
+                  longitude: req.body.alertLocation.longitude,
+                  latitude: req.body.alertLocation.latitude,
+                },
+              },
+            },
+            {
+              contentAvailable: true,
+              priority: "high",
+            }
+          );
+          res.json({
+            message: message,
+            data: {
+              alert: alertItem,
+              employee: employee,
+              employeeAlertId: employeeAlert.employeeAlertId,
+            },
           });
         });
       })
