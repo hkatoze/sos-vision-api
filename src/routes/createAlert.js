@@ -27,50 +27,95 @@ module.exports = (app, admin) => {
             alertId: alertItem.alertId,
             employeeId: employee.employeeId,
           }).then((employeeAlert) => {
-            // Filtrer les utilisateurs en fonction de leur rôle
-            const roleToFilter =
-              req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
+            //=============================
+            const locationObject = JSON.parse(alertItem.alertLocation);
+            const geopoint = new admin.firestore.GeoPoint(
+              locationObject.latitude,
+              locationObject.longitude
+            );
+            const firebaseAlert = {
+              alert: {
+                alertDatetime: admin.firestore.Timestamp.fromDate(
+                  alertItem.alertDatetime
+                ),
+                alertId: alertItem.alertId,
+                alertLocation: geopoint,
+                alertStatus: alertItem.alertStatus,
+                alertType: alertItem.alertType,
+                companyId: alertItem.companyId,
+              },
+              employee: {
+                companyId: employee.companyId,
+                employeeId: employee.employeeId, // Utilisez l'ID généré par Sequelize
+                firstname: employee.firstname,
+                lastname: employee.lastname,
+                phone_number: employee.phone_number,
+                tokens: [],
+                role: employee.role,
+                job: employee.job,
+                profilUrl: employee.profilUrl,
+              },
+              employeeAlertId: employeeAlert.employeeAlertId,
+            };
 
-            const snapshot = admin
+            admin
               .firestore()
-              .collection("users")
-              .where("companyId", "==", req.body.companyId)
-              .where("role", "==", roleToFilter)
-              .get()
-              .then((snapshots) => {
-                const tokensArray = [];
-                snapshots.forEach((doc) => {
-                  const tokensString = doc.data().tokens;
-                  if (tokensString) {
-                    const tokens = JSON.parse(tokensString);
-                    tokensArray.push(...tokens);
-                  }
-                });
-                const messageToSend = {
-                  data: {
-                    type: "warning",
-                    content: "J'ai besoin d'aide 🆘🆘🆘",
-                  },
-                  topic: "weather",
-                };
-                admin
-                  .messaging()
-                  .send(messageToSend)
-                  .then((response) => {
-                    console.log("Successfully sent message:", response);
-                  })
-                  .catch((error) => {
-                    console.log("Error sending message:", error);
+              .collection("alert_pivot")
+              .doc(`${employeeAlert.employeeAlertId}`)
+              .set(firebaseAlert)
+              .then(() => {
+                // Filtrer les utilisateurs en fonction de leur rôle
+                const roleToFilter =
+                  req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
+
+                const snapshot = admin
+                  .firestore()
+                  .collection("users")
+                  .where("companyId", "==", req.body.companyId)
+                  .where("role", "==", roleToFilter)
+                  .get()
+                  .then((snapshots) => {
+                    const tokensArray = [];
+                    snapshots.forEach((doc) => {
+                      const tokensString = doc.data().tokens;
+                      if (tokensString) {
+                        const tokens = JSON.parse(tokensString);
+                        tokensArray.push(...tokens);
+                      }
+                    });
+                    const messageToSend = {
+                      data: {
+                        type: "warning",
+                        content: "J'ai besoin d'aide 🆘🆘🆘",
+                      },
+                      topic: "weather",
+                    };
+                    admin
+                      .messaging()
+                      .send(messageToSend)
+                      .then((response) => {
+                        console.log("Successfully sent message:", response);
+                      })
+                      .catch((error) => {
+                        console.log("Error sending message:", error);
+                      });
+                    res.json({
+                      message: message,
+                      data: {
+                        alert: alertItem,
+                        employee: employee,
+                        employeeAlertId: employeeAlert.employeeAlertId,
+                      },
+                    });
                   });
-                res.json({
-                  message: message,
-                  data: {
-                    alert: alertItem,
-                    employee: employee,
-                    employeeAlertId: employeeAlert.employeeAlertId,
-                  },
-                });
+              })
+              .catch((firebaseError) => {
+                console.log(firebaseError);
+                const message = `L'alert n'a pas pu être ajouté à Firestore. Réessayer dans quelques instants.`;
+                res.status(500).json({ message, data: firebaseError });
               });
+
+            //=====================================
           });
         });
       })
