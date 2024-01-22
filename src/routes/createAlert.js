@@ -69,14 +69,14 @@ module.exports = (app, admin) => {
                 const roleToFilter =
                   req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
 
-                const snapshot = admin
+                admin
                   .firestore()
                   .collection("users")
                   .where("companyId", "==", req.body.companyId)
                   .where("role", "==", roleToFilter)
                   .get()
                   .then((snapshots) => {
-                    const tokensArray = [];
+                    let tokensArray = [];
                     snapshots.forEach((doc) => {
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
