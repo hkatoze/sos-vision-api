@@ -79,7 +79,7 @@ module.exports = (app, admin) => {
                     snapshots.forEach((doc) => {
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
-                        const tokens = JSON.parse(tokensString);
+                        const tokens =  tokensString;
                         tokensArray.push(...tokens);
                       }
                     });
