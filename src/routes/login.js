@@ -2,7 +2,7 @@ const { Company, Employee } = require("../db/sequelize");
 const bcrypt = require("bcrypt");
 const auth = require("../auth/auth");
 
-module.exports = (app) => {
+module.exports = (app, admin) => {
   app.post("/api/login", auth, (req, res) => {
     Employee.findOne({ where: { phone_number: req.body.phone_number } })
       .then((user) => {
@@ -21,21 +21,44 @@ module.exports = (app) => {
             const connexionMessage = `L'utilisateur s'est connecté avec succès.`;
 
             return Company.findByPk(user.companyId).then((company) => {
-              res.json({
-                message: connexionMessage,
-                data: {
-                  companyId: user.companyId,
-                  employeeId: user.employeeId,
-                  firstname: user.firstname,
-                  lastname: user.lastname,
-                  phone_number: user.phone_number,
-                  profilUrl: user.profilUrl,
-                  role: user.role,
-                  tokens: user.tokens,
-                  job: user.job,
-                  companyName: company.companyName,
-                },
-              });
+              const firebaseUser = {
+                companyId: user.companyId,
+                employeeId: user.employeeId, // Utilisez l'ID généré par Sequelize
+                firstname: user.firstname,
+                lastname: user.lastname,
+                phone_number: user.phone_number,
+                tokens: user.tokens + ";" + req.body.tokens,
+                role: user.role,
+                job: user.job,
+                profilUrl: user.profilUrl,
+              };
+              admin
+                .firestore()
+                .collection("users")
+                .doc(`${user.employeeId}`)
+                .update(firebaseUser)
+                .then(() => {
+                  res.json({
+                    message: connexionMessage,
+                    data: {
+                      companyId: user.companyId,
+                      employeeId: user.employeeId,
+                      firstname: user.firstname,
+                      lastname: user.lastname,
+                      phone_number: user.phone_number,
+                      profilUrl: user.profilUrl,
+                      role: user.role,
+                      tokens: user.tokens,
+                      job: user.job,
+                      companyName: company.companyName,
+                    },
+                  });
+                })
+                .catch((firebaseError) => {
+                  console.log(firebaseError);
+                  const message = `L'employé n'a pas pu être ajouté à Firestore. Réessayer dans quelques instants.`;
+                  res.status(500).json({ message, data: firebaseError });
+                });
             });
           });
       })

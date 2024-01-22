@@ -80,8 +80,7 @@ module.exports = (app, admin) => {
                     snapshots.forEach((doc) => {
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
-                        const tokens = tokensString;
-                        tokensArray.push(...tokens);
+                        tokensArray = tokensString.split(";").filter(Boolean);
                       }
                     });
                     const messageToSend = {
