@@ -56,7 +56,7 @@ require("./src/routes/signupToApi")(app);
 require("./src/routes/loginToApi")(app);
 
 /* ============MOBILE APP USES CASES ROUTES============= */
-require("./src/routes/login")(app);
+require("./src/routes/login")(app, admin);
 require("./src/routes/createAlert")(app, admin);
 require("./src/routes/getAllAlerts")(app);
 require("./src/routes/getAllEmployeeAlerts")(app);

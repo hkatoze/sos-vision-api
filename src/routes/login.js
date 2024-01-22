@@ -44,7 +44,7 @@ module.exports = (app, admin) => {
                     return Employee.findByPk(user.employeeId).then(
                       (employee) => {
                         if (employee === null) {
-                          const message = `L'employé demandé n'existe pas. Réessayer avec un autre identifiant.`;
+                          const message = `L'employé demandé n'existe pas. Réessayer avec un autre identifiant`;
 
                           return res.status(404).json({ message });
                         }
