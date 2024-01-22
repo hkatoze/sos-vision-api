@@ -91,12 +91,13 @@ module.exports = (app, admin) => {
                             ? req.body.message
                             : "J'ai besoin d'aide 🆘🆘🆘",
                       },
-                      topic: "weather",
+                      tokens: tokensArray,
                     };
                     admin
                       .messaging()
-                      .send(messageToSend)
+                      .sendMulticast(messageToSend)
                       .then((response) => {
+                        console.log("tokens", tokensArray);
                         console.log("Successfully sent message:", response);
                       })
                       .catch((error) => {
