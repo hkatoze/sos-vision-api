@@ -38,20 +38,34 @@ module.exports = (app, admin) => {
                 .doc(`${user.employeeId}`)
                 .update(firebaseUser)
                 .then(() => {
-                  res.json({
-                    message: connexionMessage,
-                    data: {
-                      companyId: user.companyId,
-                      employeeId: user.employeeId,
-                      firstname: user.firstname,
-                      lastname: user.lastname,
-                      phone_number: user.phone_number,
-                      profilUrl: user.profilUrl,
-                      role: user.role,
-                      tokens: user.tokens,
-                      job: user.job,
-                      companyName: company.companyName,
-                    },
+                  Employee.update(firebaseUser, {
+                    where: { employeeId: user.employeeId },
+                  }).then((_) => {
+                    return Employee.findByPk(user.employeeId).then(
+                      (employee) => {
+                        if (employee === null) {
+                          const message = `L'employé demandé n'existe pas. Réessayer avec un autre identifiant.`;
+
+                          return res.status(404).json({ message });
+                        }
+
+                        res.json({
+                          message: connexionMessage,
+                          data: {
+                            companyId: user.companyId,
+                            employeeId: user.employeeId,
+                            firstname: user.firstname,
+                            lastname: user.lastname,
+                            phone_number: user.phone_number,
+                            profilUrl: user.profilUrl,
+                            role: user.role,
+                            tokens: user.tokens,
+                            job: user.job,
+                            companyName: company.companyName,
+                          },
+                        });
+                      }
+                    );
                   });
                 })
                 .catch((firebaseError) => {
