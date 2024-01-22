@@ -27,8 +27,8 @@ module.exports = (app, admin) => {
             alertId: alertItem.alertId,
             employeeId: employee.employeeId,
           }).then((employeeAlert) => {
-            //=============================
-            const locationObject = JSON.parse(alertItem.alertLocation);
+
+            const locationObject =  alertItem.alertLocation;
             const geopoint = new admin.firestore.GeoPoint(
               locationObject.latitude,
               locationObject.longitude
