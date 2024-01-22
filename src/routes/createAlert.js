@@ -11,6 +11,7 @@ module.exports = (app, admin) => {
     Alert.create({
       companyId: req.body.companyId,
       employeeId: req.body.employeeId,
+      message: req.body.message,
       alertType: req.body.alertType,
       alertStatus: req.body.alertStatus,
       alertLocation: {
@@ -27,8 +28,7 @@ module.exports = (app, admin) => {
             alertId: alertItem.alertId,
             employeeId: employee.employeeId,
           }).then((employeeAlert) => {
-
-            const locationObject =  alertItem.alertLocation;
+            const locationObject = alertItem.alertLocation;
             const geopoint = new admin.firestore.GeoPoint(
               locationObject.latitude,
               locationObject.longitude
@@ -43,6 +43,7 @@ module.exports = (app, admin) => {
                 alertStatus: alertItem.alertStatus,
                 alertType: alertItem.alertType,
                 companyId: alertItem.companyId,
+                message: alertItem.message,
               },
               employee: {
                 companyId: employee.companyId,
@@ -79,14 +80,17 @@ module.exports = (app, admin) => {
                     snapshots.forEach((doc) => {
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
-                        const tokens =  tokensString;
+                        const tokens = tokensString;
                         tokensArray.push(...tokens);
                       }
                     });
                     const messageToSend = {
                       data: {
                         type: "warning",
-                        content: "J'ai besoin d'aide 🆘🆘🆘",
+                        content:
+                          req.body.message != null
+                            ? req.body.message
+                            : "J'ai besoin d'aide 🆘🆘🆘",
                       },
                       topic: "weather",
                     };

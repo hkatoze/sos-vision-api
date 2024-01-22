@@ -1,10 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const alertModel = require("./Alert.js");
-const employeeModel= require("./Employee.js")
+const employeeModel = require("./Employee.js");
 const validRoles = ["USER", "ADMIN"];
 const validAlertsType = ["GENERAL", "NEED HELP"];
 const validAlertsStatus = ["IN PROGRESS", "IN DANGER", "SAFE"];
-
 
 const sequelize = new Sequelize(
   "u833159023_sos_vision",
@@ -18,7 +17,7 @@ const sequelize = new Sequelize(
   }
 );
 
-const Alert= sequelize.define(
+const Alert = sequelize.define(
   "Alert",
   {
     alertId: {
@@ -49,6 +48,9 @@ const Alert= sequelize.define(
           }
         },
       },
+    },
+    message: {
+      type: DataTypes.STRING,
     },
 
     alertStatus: {
@@ -83,7 +85,7 @@ const Alert= sequelize.define(
   { timestamp: true }
 );
 
-const Employee= sequelize.define(
+const Employee = sequelize.define(
   "Employee",
   {
     employeeId: {
@@ -215,4 +217,4 @@ const EmployeeAlert = sequelize.define(
 EmployeeAlert.belongsTo(Employee, { foreignKey: "employeeId" });
 EmployeeAlert.belongsTo(Alert, { foreignKey: "alertId" });
 
-module.exports= {EmployeeAlert,Alert,Employee}
+module.exports = { EmployeeAlert, Alert, Employee };
