@@ -76,16 +76,17 @@ module.exports = (app, admin) => {
                   .where("role", "==", roleToFilter)
                   .get()
                   .then((snapshots) => {
-                    let tokensArray = [];
-
+                    const tokensArray = [];
 
                     snapshots.forEach((doc) => {
                       //tokensString= "wssdslkdlk;slkjs;skjks;";
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
                         //tokensArrayForDoc= ["wssdslkdlk","slkjs","skjks"]
-                       const tokensArrayForDoc = tokensString.split(";").filter(Boolean);
-                       tokensArray.concat(tokensArrayForDoc);
+                        const tokensArrayForDoc = tokensString
+                          .split(";")
+                          .filter(Boolean);
+                        tokensArray.push(...tokensArrayForDoc);
                       }
                     });
                     const messageToSend = {
