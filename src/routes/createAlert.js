@@ -51,7 +51,7 @@ module.exports = (app, admin) => {
                 firstname: employee.firstname,
                 lastname: employee.lastname,
                 phone_number: employee.phone_number,
-                tokens: [],
+                tokens: "",
                 role: employee.role,
                 job: employee.job,
                 profilUrl: employee.profilUrl,
@@ -77,10 +77,15 @@ module.exports = (app, admin) => {
                   .get()
                   .then((snapshots) => {
                     let tokensArray = [];
+
+
                     snapshots.forEach((doc) => {
+                      //tokensString= "wssdslkdlk;slkjs;skjks;";
                       const tokensString = doc.data().tokens;
                       if (tokensString) {
-                        tokensArray = tokensString.split(";").filter(Boolean);
+                        //tokensArrayForDoc= ["wssdslkdlk","slkjs","skjks"]
+                       const tokensArrayForDoc = tokensString.split(";").filter(Boolean);
+                       tokensArray.concat(tokensArrayForDoc);
                       }
                     });
                     const messageToSend = {

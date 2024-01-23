@@ -14,7 +14,7 @@ module.exports = (app,admin) => {
         phone_number: req.body.phone_number,
         password: hash,
         role: req.body.role,
-        tokens: "[]",
+        tokens: "",
         profilUrl: req.body.profilUrl,
         job: req.body.job,
       })
@@ -30,7 +30,7 @@ module.exports = (app,admin) => {
             firstname: employee.firstname,
             lastname: employee.lastname,
             phone_number: employee.phone_number,
-            tokens: [],
+            tokens: "",
             role: employee.role,
             job: employee.job,
             profilUrl: employee.profilUrl,
