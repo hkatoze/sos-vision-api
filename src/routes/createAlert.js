@@ -90,9 +90,9 @@ module.exports = (app, admin) => {
                       }
                     });
                     const messageToSend = {
-                      data: {
-                        type: "warning",
-                        content:
+                      notification: {
+                        title: employee.lastname,
+                        body:
                           req.body.message != null
                             ? req.body.message
                             : "J'ai besoin d'aide 🆘🆘🆘",
