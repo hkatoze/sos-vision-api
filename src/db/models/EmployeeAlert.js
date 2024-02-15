@@ -55,14 +55,14 @@ const Alert = sequelize.define(
 
     alertStatus: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: { msg: "Le status de l'alerte est requis" },
         notNull: { msg: "Le status de l'alerte est requis" },
         isAlertStatusValid(value) {
           if (!validAlertsStatus.includes(value)) {
             throw new Error(
-              `Le statut de l'alerte doit appartenir à la liste suivante [${validAlertsType}]`
+              `Le statut de l'alerte doit appartenir à la liste suivante [${validAlertsStatus}]`
             );
           }
         },
