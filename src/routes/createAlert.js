@@ -21,7 +21,7 @@ module.exports = (app, admin) => {
     })
       .then((alert) => {
         const alertItem = alert;
-        const message = true;
+        const message = "Alert envoyée à tous les employées.";
 
         Employee.findByPk(id).then((employee) => {
           EmployeeAlert.create({
