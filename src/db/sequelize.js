@@ -1,10 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
- const {Employee,Alert,EmployeeAlert} = require("./models/EmployeeAlert")
+const EmployeeAlertModel = require("./models/EmployeeAlert");
 const CompanyModel = require("./models/Company");
- 
+const AlertModel = require("./models/Alert");
+const EmployeeModel = require("./models/Employee");
+
 const UserModel = require("./models/User");
- 
- 
 
 const sequelize = new Sequelize(
   "u833159023_sos_vision",
@@ -17,13 +17,20 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
- 
+
 const Company = CompanyModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
- 
+const Employee = EmployeeModel(sequelize, DataTypes);
+const Alert = AlertModel(sequelize, DataTypes);
+const EmployeeAlert = EmployeeAlertModel(sequelize, DataTypes);
+//Assigné les clés secondaires
+EmployeeAlert.belongsTo(Employee, {
+  foreignKey: "employeeId",
+});
+EmployeeAlert.belongsTo(Alert, { foreignKey: "alertId" });
 
 const initDb = () => {
-  return sequelize.sync().then((_) => {
+  return sequelize.sync({ force: true }).then((_) => {
     console.log(`La base de données a bien été initialisée !`);
   });
 };
