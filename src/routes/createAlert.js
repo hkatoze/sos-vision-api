@@ -110,7 +110,10 @@ module.exports = (app, admin) => {
                         console.log("Error sending message:", error);
                       });
                     res.json({
-                      message: message,
+                      message:
+                        roleToFilter == "ADMIN"
+                          ? "Alert envoyé a tous les employés"
+                          : "Alert envoyé avec succès.",
                       data: {
                         alert: alertItem,
                         employee: employee,
