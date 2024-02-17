@@ -21,7 +21,10 @@ module.exports = (app, admin) => {
     })
       .then((alert) => {
         const alertItem = alert;
-        const message = "Alert envoyée à tous les employées.";
+        const message =
+          req.body.alertType === "GENERAL"
+            ? "Alerte envoyée à tous les employées."
+            : "SOS envoyé.";
 
         Employee.findByPk(id).then((employee) => {
           EmployeeAlert.create({
@@ -110,10 +113,7 @@ module.exports = (app, admin) => {
                         console.log("Error sending message:", error);
                       });
                     res.json({
-                      message:
-                        roleToFilter == "ADMIN"
-                          ? "Alert envoyé a tous les employés"
-                          : "Alert envoyé avec succès.",
+                      message: message,
                       data: {
                         alert: alertItem,
                         employee: employee,
