@@ -98,6 +98,10 @@ module.exports = (Sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      resetPasswordCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     { timestamp: true }
   );

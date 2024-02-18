@@ -20,6 +20,11 @@ initDb();
 
 /* ........All routes list........... */
 require("./src/routes/home")(app);
+//Reset password
+require("./src/routes/resetPassword")(app);
+
+//Reset password code checking
+require("./src/routes/resetPasswordCodeVerify")(app);
 
 /* ============USER ROUTES============= */
 //Get user by id
