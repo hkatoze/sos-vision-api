@@ -31,7 +31,7 @@ EmployeeAlert.belongsTo(Alert, { foreignKey: "alertId" });
 
 const initDb = () => {
   return sequelize.sync().then((_) => {
-    console.log(`La base de données a bien été initialisée !`);
+    console.log(`La base de données a bien été initialisée`);
   });
 };
 module.exports = { initDb, User, Employee, Company, Alert, EmployeeAlert };
