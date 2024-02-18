@@ -1,20 +1,27 @@
-const twilio = require("twilio");
+const axios = require("axios");
 const dotenv = require("dotenv");
 
 dotenv.config();
 async function sendVerificationCode(phone_number, verificationCode) {
-  const client = new twilio(
-    process.env.TWILIO_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  return client.messages
-    .create({
-      body: `Votre code de vérification VBS-SOS est ${verificationCode}`,
-      to: `+226${phone_number}`,
-      from: process.env.PHONE_NUMBER,
-    })
-    .then((message) => console.log(message, "Message envoyé"))
-    .catch((error) => console.log(error, "Impossible d'envoyer le message"));
+  try {
+    const url = "https://www.aqilas.com/api/v1/sms";
+    const headers = {
+      "X-AUTH-TOKEN": process.env.AUTH_TOKEN,
+      "Content-Type": "application/json",
+    };
+
+    const data = {
+      from: "VBS-SOS",
+      text: `Code de confirmation: ${verificationCode}`,
+      to: [`+226${phone_number}`],
+    };
+
+    const response = await axios.post(url, data, { headers });
+
+    return response.data;
+  } catch (error) {
+    console.error("Impossible d'envoyer le message:", error);
+  }
 }
 
 module.exports = { sendVerificationCode };
