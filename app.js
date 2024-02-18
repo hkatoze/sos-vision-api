@@ -18,7 +18,6 @@ app
   .use(favicon(__dirname + "/favicon.ico"));
 initDb();
 
-/* ........All routes list........... */
 require("./src/routes/home")(app);
 //Reset password
 require("./src/routes/resetPassword")(app);
