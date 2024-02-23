@@ -61,14 +61,79 @@ module.exports = (app, admin) => {
               },
               employeeAlertId: employeeAlert.employeeAlertId,
             };
-
+            const notificationData = {
+              alert: {
+                alertDatetime: `${alertItem.alertDatetime}`,
+                alertId: `${alertItem.alertId}`,
+                alertLocation: `${alertItem.alertLocation}`,
+                alertStatus: `${alertItem.alertStatus}`,
+                alertType: `${alertItem.alertType}`,
+                companyId: `${alertItem.companyId}`,
+                message: `${alertItem.message}`,
+              },
+              employee: {
+                companyId: `${employee.companyId}`,
+                employeeId: `${employee.employeeId}`,
+                firstname: `${employee.firstname}`,
+                lastname: `${employee.lastname}`,
+                phone_number: `${employee.phone_number}`,
+                tokens: " ",
+                role: `${employee.role}`,
+                job: `${employee.job}`,
+                profilUrl: `${employee.profilUrl}`,
+              },
+              employeeAlertId: `${employeeAlert.employeeAlertId}`,
+            };
             admin
               .firestore()
               .collection("alert_pivot")
               .doc(`${employeeAlert.employeeAlertId}`)
               .set(firebaseAlert)
               .then(() => {
-                // Filtrer les utilisateurs en fonction de leur rôle
+                if (req.body.alertType === "GENERAL") {
+                  Employee.findAll({
+                    where: { companyId: req.body.companyId },
+                  }).then((employees) => {
+                    employees.forEach((employee) => {
+                      const locationObject = alertItem.alertLocation;
+                      const geopoint = new admin.firestore.GeoPoint(
+                        locationObject.latitude,
+                        locationObject.longitude
+                      );
+                      const firebaseAlertSubCollection = {
+                        alert: {
+                          alertDatetime: admin.firestore.Timestamp.fromDate(
+                            alertItem.alertDatetime
+                          ),
+                          alertId: alertItem.alertId,
+                          alertLocation: geopoint,
+                          alertStatus: "IN PROGRESS",
+                          alertType: "GENERAL",
+                          companyId: alertItem.companyId,
+                          message: alertItem.message,
+                        },
+                        employee: {
+                          companyId: employee.companyId,
+                          employeeId: employee.employeeId,
+                          firstname: employee.firstname,
+                          lastname: employee.lastname,
+                          phone_number: employee.phone_number,
+                          tokens: "",
+                          role: employee.role,
+                          job: employee.job,
+                          profilUrl: employee.profilUrl,
+                        },
+                      };
+
+                      admin
+                        .firestore()
+                        .collection("alert_pivot")
+                        .doc(`${employeeAlert.employeeAlertId}`)
+                        .collection("in_progress_alerts")
+                        .add(firebaseAlertSubCollection);
+                    });
+                  });
+                }
                 const roleToFilter =
                   req.body.alertType === "NEED HELP" ? "ADMIN" : "USER";
 
@@ -100,6 +165,7 @@ module.exports = (app, admin) => {
                             ? req.body.message
                             : "J'ai besoin d'aide 🆘🆘🆘",
                       },
+
                       tokens: tokensArray,
                     };
                     admin
@@ -127,8 +193,6 @@ module.exports = (app, admin) => {
                 const message = `L'alert n'a pas pu être ajouté à Firestore. Réessayer dans quelques instants.`;
                 res.status(500).json({ message, data: firebaseError });
               });
-
-            //=====================================
           });
         });
       })

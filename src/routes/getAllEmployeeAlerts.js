@@ -1,5 +1,5 @@
 const { EmployeeAlert, Employee, Alert } = require("../db/sequelize");
- 
+
 const { Op } = require("sequelize");
 const auth = require("../auth/auth");
 
@@ -23,7 +23,42 @@ module.exports = (app) => {
         res.json({ message, data: alertsEmployees });
       });
     }
+    if (req.query.companyId) {
+      const companyId = req.query.companyId;
 
+      return EmployeeAlert.findAll({
+        include: [
+          {
+            model: Alert,
+            where: { companyId },
+          },
+          {
+            model: Employee,
+          },
+        ],
+      }).then((alertsEmployees) => {
+        const message = `Il y a au total ${alertsEmployees.length} alertes de l'entreprise ${companyId}`;
+        res.json({ message, data: alertsEmployees });
+      });
+    }
+    if (req.query.employeeId) {
+      const employeeId = req.query.employeeId;
+
+      return EmployeeAlert.findAll({
+        where: { employeeId },
+        include: [
+          {
+            model: Alert,
+          },
+          {
+            model: Employee,
+          },
+        ],
+      }).then((alertsEmployees) => {
+        const message = `Il y a au total ${alertsEmployees.length} alertes de l'employée ${employeeId}`;
+        res.json({ message, data: alertsEmployees });
+      });
+    }
     if (req.query.type) {
       const type = req.query.type;
 

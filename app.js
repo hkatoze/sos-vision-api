@@ -65,7 +65,7 @@ require("./src/routes/createAlert")(app, admin);
 require("./src/routes/getAllAlerts")(app);
 require("./src/routes/getAllEmployeeAlerts")(app);
 require("./src/routes/getAlertByPk")(app);
-require("./src/routes/updateAlert")(app);
+require("./src/routes/updateAlert")(app, admin);
 
 //404 error managment
 app.use(({ res }) => {
