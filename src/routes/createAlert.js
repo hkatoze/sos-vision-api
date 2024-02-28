@@ -61,29 +61,21 @@ module.exports = (app, admin) => {
               },
               employeeAlertId: employeeAlert.employeeAlertId,
             };
+
             const notificationData = {
-              alert: {
-                alertDatetime: `${alertItem.alertDatetime}`,
-                alertId: `${alertItem.alertId}`,
-                alertLocation: `${alertItem.alertLocation}`,
-                alertStatus: `${alertItem.alertStatus}`,
-                alertType: `${alertItem.alertType}`,
-                companyId: `${alertItem.companyId}`,
-                message: `${alertItem.message}`,
-              },
-              employee: {
-                companyId: `${employee.companyId}`,
-                employeeId: `${employee.employeeId}`,
-                firstname: `${employee.firstname}`,
-                lastname: `${employee.lastname}`,
-                phone_number: `${employee.phone_number}`,
-                tokens: " ",
-                role: `${employee.role}`,
-                job: `${employee.job}`,
-                profilUrl: `${employee.profilUrl}`,
-              },
-              employeeAlertId: `${employeeAlert.employeeAlertId}`,
+              alertDatetime: `${alertItem.alertDatetime}`,
+              employeeId: `${employee.employeeId}`,
+              employeeName: `${employee.lastname} ${employee.firstname}`,
+              employeePhone: `${employee.phone_number}`,
+              alertLocationLong: `${req.body.alertLocation.longitude}`,
+              alertLocationLat: `${req.body.alertLocation.latitude}`,
+              alertId: `${alertItem.alertId}`,
+              companyId: `${alertItem.companyId}`,
+              alertStatus: `${alertItem.alertStatus}`,
+              alertType: `${alertItem.alertType}`,
+              message: `${alertItem.message}`,
             };
+
             admin
               .firestore()
               .collection("alert_pivot")
@@ -165,7 +157,7 @@ module.exports = (app, admin) => {
                             ? req.body.message
                             : "J'ai besoin d'aide 🆘🆘🆘",
                       },
-
+                      data: notificationData,
                       tokens: tokensArray,
                     };
                     admin
