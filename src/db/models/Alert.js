@@ -55,6 +55,20 @@ module.exports = (Sequelize, DataTypes) => {
           notNull: { msg: "La localisation de l'alerte est requise" },
         },
       },
+
+      initialStatus: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      finalStatus: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      updateBy: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     { timestamp: true }
   );

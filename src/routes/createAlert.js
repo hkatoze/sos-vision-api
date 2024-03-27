@@ -14,6 +14,9 @@ module.exports = (app, admin) => {
       message: req.body.message,
       alertType: req.body.alertType,
       alertStatus: req.body.alertStatus,
+      initialStatus: req.body.alertStatus,
+      finalStatus: null,
+      updateBy: null,
       alertLocation: {
         longitude: req.body.alertLocation.longitude,
         latitude: req.body.alertLocation.latitude,
@@ -47,6 +50,10 @@ module.exports = (app, admin) => {
                 alertType: alertItem.alertType,
                 companyId: alertItem.companyId,
                 message: alertItem.message,
+
+                initialStatus: alertItem.initialStatus,
+                finalStatus: alertItem.finalStatus,
+                updateBy: alertItem.updateBy,
               },
               employee: {
                 companyId: employee.companyId,
@@ -103,6 +110,9 @@ module.exports = (app, admin) => {
                           alertType: "GENERAL",
                           companyId: alertItem.companyId,
                           message: alertItem.message,
+                          initialStatus: alertItem.initialStatus,
+                          finalStatus: alertItem.finalStatus,
+                          updateBy: alertItem.updateBy,
                         },
                         employee: {
                           companyId: employee.companyId,
