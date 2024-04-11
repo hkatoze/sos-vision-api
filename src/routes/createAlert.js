@@ -161,17 +161,8 @@ module.exports = (app, admin) => {
                     });
                     const messageToSend = {
                       notification: {
-                        title:
-                          req.body.alertType === "NEED HELP"
-                            ? employee.lastname + " " + employee.firstname
-                            : "Alerte de vérification",
-                        body:
-                          req.body.alertType === "NEED HELP"
-                            ? req.body.message != null
-                              ? req.body.message
-                              : "J'ai besoin d'aide SVP 👋"
-                            : req.body.message +
-                              "\nConfirmer votre statut de sécurité",
+                        title: "",
+                        body: "",
                       },
                       data: notificationData,
                       tokens: tokensArray,
